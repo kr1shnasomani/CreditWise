@@ -11,11 +11,7 @@ const Hero = () => {
       </div>
 
       <div className="relative mx-auto max-w-4xl text-center py-16 md:py-24 animate-enter">
-        <div className="inline-flex items-center gap-2 rounded-full border border-accent/20 px-4 py-2 text-xs md:text-sm bg-card/80 backdrop-blur-sm shadow-soft">
-          <Shield className="text-accent" size={16} />
-          <span className="text-foreground font-medium">CreditWise — Alternative Data Credit Risk</span>
-        </div>
-        <h1 className="mt-8 text-4xl md:text-7xl font-bold tracking-tight leading-tight">
+        <h1 className="text-4xl md:text-7xl font-bold tracking-tight leading-tight">
           <span className="bg-gradient-to-r from-accent via-primary to-accent bg-clip-text text-transparent">
             Credit Risk Prediction
           </span>
@@ -26,18 +22,14 @@ const Hero = () => {
           Predict Probability of Default using <span className="text-accent font-medium">alternative behavioral signals</span>. Upload your dataset and assess risk instantly with our AI-powered analytics.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="#analyzer">
-            <Button size="lg" className="px-8 py-3 bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
+          <a href="#analyzer" className="hover-scale">
+            <Button size="lg" className="px-8 py-3 bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
               Get Started
             </Button>
           </a>
-          <a className="story-link text-foreground hover:text-accent transition-colors duration-200 font-medium" href="/how-it-works">
+          <a className="story-link text-foreground hover:text-accent transition-all duration-300 font-medium hover-scale" href="/how-it-works">
             How it works →
           </a>
-        </div>
-        <div className="mt-12 inline-flex items-center gap-2 text-sm text-muted-foreground bg-card/50 backdrop-blur-sm px-4 py-2 rounded-full border border-border/50">
-          <TrendingUp className="text-accent" size={16} /> 
-          <span>Real-time monitoring ready</span>
         </div>
       </div>
     </header>
