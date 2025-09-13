@@ -1,16 +1,12 @@
-// Test:
-// 1) Ask: "What does FinShield predict?"
-// 2) Ask: "List the dataset features."
-// Expect grounded answers from the hardcoded context in the edge function.
-
 import { useState } from "react";
-import { Bot, X, Minimize2, Send } from "lucide-react";
+import { MessageCircle, X, Minimize2, Send, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { askCreditWise } from "@/api";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Message {
   id: string;
@@ -21,12 +17,13 @@ interface Message {
 }
 
 export default function FloatingChatbot() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hello! I\'m your CreditWise assistant. How can I help you with credit risk analysis today?',
+      text: t('chatbot.welcome'),
       sender: 'bot',
       timestamp: new Date()
     }
@@ -55,7 +52,7 @@ export default function FloatingChatbot() {
       
       let responseText = result.answer;
       if (!responseText || responseText === "No response.") {
-        responseText = "Sorry, I couldn't find that in CreditWise's context.";
+        responseText = t('chatbot.noResponse');
       }
 
       const botMessage: Message = {
@@ -68,9 +65,9 @@ export default function FloatingChatbot() {
       
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      console.error('Chat error:', error);
+      
       toast({
-        title: "Chat temporarily unavailable. Please try again.",
+        title: t('chatbot.unavailable'),
         variant: "destructive"
       });
     } finally {
@@ -88,13 +85,25 @@ export default function FloatingChatbot() {
     <>
       {/* Floating Chat Button */}
       {!isOpen && (
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-background border-2 border-border z-50 p-0"
-          size="icon"
-        >
-          <Bot className="w-12 h-12 text-foreground" />
-        </Button>
+        <div className="fixed bottom-6 right-6 z-50">
+          <Button
+            onClick={() => setIsOpen(true)}
+            className="relative w-16 h-16 rounded-full bg-gradient-primary shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-110 group overflow-hidden border-0 p-0"
+            size="icon"
+          >
+            {/* Glow effect */}
+            <div className="absolute inset-0 rounded-full bg-gradient-primary opacity-75 blur-lg group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            {/* Main content */}
+            <div className="relative z-10 flex items-center justify-center w-full h-full">
+              <MessageCircle className="w-8 h-8 text-primary-foreground transition-transform duration-300 group-hover:rotate-12" />
+              <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-accent animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </div>
+            
+            {/* Ripple effect */}
+            <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-ping opacity-0 group-hover:opacity-75"></div>
+          </Button>
+        </div>
       )}
 
       {/* Chatbot Screen */}
@@ -105,12 +114,18 @@ export default function FloatingChatbot() {
           }`}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground rounded-t-lg">
-            <div className="flex items-center gap-2">
-              <Bot className="w-5 h-5" />
-              <span className="font-medium">CreditWise Assistant</span>
+          <div className="flex items-center justify-between p-4 border-b bg-gradient-primary text-primary-foreground rounded-t-lg relative overflow-hidden">
+            {/* Background glow */}
+            <div className="absolute inset-0 bg-gradient-subtle opacity-50"></div>
+            
+            <div className="flex items-center gap-3 relative z-10">
+              <div className="relative">
+                <MessageCircle className="w-6 h-6 text-primary-foreground" />
+                <div className="absolute -inset-1 rounded-full bg-accent/20 blur-sm"></div>
+              </div>
+              <span className="font-semibold text-primary-foreground">{t('chatbot.title')}</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 relative z-10">
               <Button
                 variant="ghost"
                 size="icon"
@@ -153,7 +168,7 @@ export default function FloatingChatbot() {
                         </div>
                         {message.sender === 'bot' && message.sources && (
                           <div className="text-xs text-muted-foreground mt-1 opacity-75">
-                            Sources available
+                            {t('chatbot.sources')}
                           </div>
                         )}
                       </div>
@@ -162,7 +177,7 @@ export default function FloatingChatbot() {
                   {isTyping && (
                     <div className="flex justify-start">
                       <div className="bg-muted text-muted-foreground p-3 rounded-lg text-sm">
-                        Typing...
+                        {t('chatbot.typing')}
                       </div>
                     </div>
                   )}
@@ -172,7 +187,7 @@ export default function FloatingChatbot() {
               {/* Input Area */}
               <div className="flex gap-2 p-4 border-t">
                 <Input
-                  placeholder="Type your message..."
+                  placeholder={t('chatbot.placeholder')}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
